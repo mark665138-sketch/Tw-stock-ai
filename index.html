@@ -1,0 +1,38 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>台股 AI 投資研究室｜穩定版</title><meta name="theme-color" content="#103047"><link rel="manifest" href="manifest.webmanifest"><style>
+*{box-sizing:border-box}body{margin:0;font:16px system-ui,'Noto Sans TC',sans-serif;background:#eff4f8;color:#173044}header{padding:25px 18px;background:linear-gradient(120deg,#10283f,#126276);color:#fff}h1{font-size:23px;margin:0 0 8px}header p{margin:0;opacity:.85}main{max-width:780px;margin:auto;padding:16px 13px 50px}.card{background:#fff;padding:19px;border-radius:19px;margin:0 0 15px;box-shadow:0 4px 15px #1233}h2{font-size:20px;margin:0 0 16px}.fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}label{display:block;font-weight:650;font-size:14px}input,select,textarea{font:inherit;width:100%;border:1px solid #cbd7df;border-radius:10px;padding:12px;background:white;color:#173044;margin-top:6px}textarea{min-height:118px;line-height:1.55;resize:vertical}button{border:0;background:#0a7d88;color:#fff;padding:14px;border-radius:12px;font-weight:700;font-size:15px;cursor:pointer}.buttons{display:flex;gap:9px;flex-wrap:wrap;margin:14px 0}.buttons button{flex:1}.secondary{background:#e4f1f2;color:#125366}.hint,.small{font-size:13px;color:#687f8c;line-height:1.65}details{background:#f6fafc;border:1px solid #dfe9ef;border-radius:12px;padding:13px;margin:10px 0}summary{font-size:16px;font-weight:750;cursor:pointer}details textarea{background:white}#message{font-size:14px;color:#146454;min-height:1.5em}#output{white-space:pre-wrap;background:#f5f9fb;padding:12px;border-radius:10px;display:none}footer{text-align:center;color:#748793;font-size:12px;padding:14px}@media print{header,.buttons,.small,footer{display:none}.card{box-shadow:none;border:1px solid #ddd}details{break-inside:avoid}textarea{min-height:110px}}@media(max-width:390px){.fields{grid-template-columns:1fr}}
+</style></head><body><header><h1>📈 台股 AI 投資研究室</h1><p>穩定修復版 · 八大功能直接顯示</p></header><main><section class="card"><h2>🔎 個股綜合分析</h2><div class="fields"><label>股票代號<input id="code" value="2484" inputmode="numeric"></label><label>公司名稱<input id="company" value="希華"></label><label>投資期間<select id="period"><option>短線（1～4週）</option><option>波段（1～6個月）</option><option>長線（1年以上）</option></select></label><label>研究日期<input id="date" type="date"></label></div><p class="small">不必按「建立報告」：下方八大功能已直接展開，可以立即輸入。這是本機研究筆記工具，不會自動查詢即時行情。</p></section><section class="card"><h2>📋 八大研究報告</h2><label>研究結論<textarea id="summary" placeholder="綜合判斷與風險提醒"></textarea></label><label>資料日期與來源<textarea id="sources" placeholder="填寫公開資訊來源、網址及查證日期"></textarea></label><details open><summary>1. 潛力股篩選</summary><p class="hint">月營收、EPS、毛利率、負債</p><textarea id="s0" placeholder="已查證事實：&#10;分析推論：&#10;待確認資訊："></textarea></details><details open><summary>2. 個股價值分析</summary><p class="hint">財報、估值、現金流</p><textarea id="s1" placeholder="已查證事實：&#10;分析推論：&#10;待確認資訊："></textarea></details><details open><summary>3. 產業競爭比較</summary><p class="hint">競爭者、產品與市場</p><textarea id="s2" placeholder="已查證事實：&#10;分析推論：&#10;待確認資訊："></textarea></details><details open><summary>4. 大盤影響</summary><p class="hint">指數、法人與成交量</p><textarea id="s3" placeholder="已查證事實：&#10;分析推論：&#10;待確認資訊："></textarea></details><details open><summary>5. 股價上漲原因</summary><p class="hint">公告、新聞與量價</p><textarea id="s4" placeholder="已查證事實：&#10;分析推論：&#10;待確認資訊："></textarea></details><details open><summary>6. 進出場風險</summary><p class="hint">進場、停損、報酬風險</p><textarea id="s5" placeholder="已查證事實：&#10;分析推論：&#10;待確認資訊："></textarea></details><details open><summary>7. 交易紀錄檢討</summary><p class="hint">交易紀錄與檢討</p><textarea id="s6" placeholder="已查證事實：&#10;分析推論：&#10;待確認資訊："></textarea></details><details open><summary>8. 每日追蹤清單</summary><p class="hint">觀察價位、籌碼、事件</p><textarea id="s7" placeholder="已查證事實：&#10;分析推論：&#10;待確認資訊："></textarea></details><div class="buttons"><button id="save" type="button">💾 儲存報告</button><button id="load" class="secondary" type="button">📂 讀取報告</button></div><div class="buttons"><button id="export" class="secondary" type="button">⬇️ 匯出 TXT</button><button id="print" class="secondary" type="button">🖨️ 列印／PDF</button></div><p id="message" aria-live="polite"></p><pre id="output"></pre><p class="small">若手機預覽器禁止 JavaScript，八大欄位仍可顯示及手動輸入，但儲存、匯出等按鈕需要使用 Chrome 開啟。離開頁面前請先確認儲存成功。</p></section></main><footer>研究用途 · 非投資建議 · 無即時行情</footer><script>
+(function(){
+  var ids=['code','company','period','date','summary','sources'];
+  for(var i=0;i<8;i++)ids.push('s'+i);
+  function el(id){return document.getElementById(id)}
+  function msg(s){el('message').textContent=s}
+  try{el('date').value=new Date().toISOString().slice(0,10)}catch(e){}
+  function data(){var d={};ids.forEach(function(k){d[k]=el(k).value});return d}
+  function key(){return 'twlab-stable-'+el('code').value.trim()}
+  function report(){
+    var d=data();
+    var lines=[d.code+' '+d.company+'｜台股八大研究報告','研究日期：'+d.date,'投資期間：'+d.period,'','研究結論：',d.summary,'','資料來源：',d.sources];
+    var names=['潛力股篩選','個股價值分析','產業競爭比較','大盤影響','股價上漲原因','進出場風險','交易紀錄檢討','每日追蹤清單'];
+    names.forEach(function(k,i){lines.push('',(i+1)+'. '+k,d['s'+i])});
+    return lines.join('\n');
+  }
+  el('save').onclick=function(){
+    try{localStorage.setItem(key(),JSON.stringify(data()));msg('✓ 已儲存本機報告：'+el('code').value)}
+    catch(e){msg('本機儲存受限制：'+e.message+'。請使用匯出 TXT 備份。')}
+  };
+  el('load').onclick=function(){
+    try{var s=localStorage.getItem(key());if(!s){msg('此股票尚無儲存報告');return}
+      var d=JSON.parse(s);ids.forEach(function(k){if(d[k]!==undefined)el(k).value=d[k]});msg('✓ 已讀取報告')}
+    catch(e){msg('讀取失敗：'+e.message)}
+  };
+  el('export').onclick=function(){
+    try{var blob=new Blob([report()],{type:'text/plain;charset=utf-8'});var url=URL.createObjectURL(blob);
+      var a=document.createElement('a');a.href=url;a.download='台股研究_'+el('code').value+'.txt';
+      document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(url)},2000);
+      msg('已送出下載要求')}
+    catch(e){el('output').style.display='block';el('output').textContent=report();msg('下載受限制，已顯示可複製報告')}
+  };
+  el('print').onclick=function(){try{window.print()}catch(e){msg('列印功能無法使用：'+e.message)}};
+  msg('✓ 操作功能已載入，可測試儲存');
+})();
+</script></body></html>
